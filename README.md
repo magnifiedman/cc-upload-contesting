@@ -4,7 +4,7 @@ traviswachendorf@clearchannel.com
 
 * This app will be programmed in PHP 4.4.9 *
 
-App to display embeddable galleries on CC websites (Instagram, Twitter, Vine)
+Photo upload contesting app for CC
 
 These files are meant to create:
 - Front end
