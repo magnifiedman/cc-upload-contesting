@@ -209,9 +209,11 @@ class Admin{
 			break;
 
 			case 'edit':
+				$urlCode = $this->urlCode($vars['name']);
 				$q = sprintf("UPDATE " . CONTEST_TABLE . "
 				set contest_type = '%s',
 				name = '%s',
+				url_code = '" . $urlCode . "',
 				description = '%s',
 				keywords = '%s',
 				heading = '%s',
