@@ -70,7 +70,7 @@ include 'CCOMRheader.template'; // do not modify this line
 	if($step==2){
 		echo '<!-- contest added -->';
 		echo '<a href="/common/contest/admin" class="button blue"><i class="fa fa-reply"></i> Back to Main</a>';
-		echo '<p class="success">Good job Captain! Contest "<strong>' . stripslashes($_POST['name']) . '</strong>" has been successfully added.</p>';
+		echo '<p class="success"><i class="fa fa-thumbs-up"></i> Good job Captain! Contest "<strong>' . stripslashes($_POST['name']) . '</strong>" has been successfully added.</p>';
 
 	}
 	?>

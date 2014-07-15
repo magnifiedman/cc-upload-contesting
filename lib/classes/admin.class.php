@@ -188,10 +188,10 @@ class Admin{
 				(status,contest_type,name,description,keywords,heading,body,url_code,date_entry,date_vote_1,date_winner,header_img,thumb_img,rules_form, release_form, sponsor_name_1,sponsor_img_1,sponsor_url_1,sponsor_text_1,sponsor_name_2,sponsor_img_2,sponsor_url_2,sponsor_text_2,sponsor_name_3,sponsor_img_3,sponsor_url_3,sponsor_text_3)
 				VALUES 
 				(1,'" . $vars['contest_type'] . "', '%s', '%s', '%s', '%s', '%s', '" . $urlCode ."', '" . $vars['date_entry']." ".$vars['hour_entry'] . "', '" . $vars['date_vote']." ".$vars['hour_vote'] . "', '" . $vars['date_winner']." ".$vars['hour_winner'] . "', '" . $_POST['header_img'] . "', '" . $_POST['thumb_img'] . "', '" . $_POST['rules_form'] . "', '" . $_POST['release_form'] . "', '%s', '" . $_POST['sponsor_img_1'] . "', '%s', '%s', '%s', '" . $_POST['sponsor_img_2'] . "', '%s', '%s', '%s', '" . $_POST['sponsor_img_1'] . "', '%s', '%s')",
-				mysql_real_escape_string(htmlspecialchars($vars['name'])),
-				mysql_real_escape_string(htmlspecialchars($vars['description'])),
+				mysql_real_escape_string(htmlspecialchars($vars['name'],ENT_QUOTES)),
+				mysql_real_escape_string(htmlspecialchars($vars['description'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['keywords']),
-				mysql_real_escape_string(htmlspecialchars($vars['heading'])),
+				mysql_real_escape_string(htmlspecialchars($vars['heading'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['body_text']),
 				mysql_real_escape_string($vars['sponsor_name_1']),
 				mysql_real_escape_string($vars['sponsor_url_1']),
@@ -232,10 +232,10 @@ class Admin{
 				sponsor_text_3 = '%s'
 				WHERE id = '" . $vars['id'] . "'",
 				mysql_real_escape_string($vars['contest_type']),
-				mysql_real_escape_string(htmlspecialchars($vars['name'])),
-				mysql_real_escape_string(htmlspecialchars($vars['description'])),
+				mysql_real_escape_string(htmlspecialchars($vars['name'],ENT_QUOTES)),
+				mysql_real_escape_string(htmlspecialchars($vars['description'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['keywords']),
-				mysql_real_escape_string(htmlspecialchars($vars['heading'])),
+				mysql_real_escape_string(htmlspecialchars($vars['heading'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['body_text']),
 				mysql_real_escape_string($vars['sponsor_name_1']),
 				mysql_real_escape_string($vars['sponsor_url_1']),

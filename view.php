@@ -27,7 +27,7 @@ $contest = $c->getContestDetails();
 
 
 // get status
-$nowTime = date("Y-m-d h:i:s");
+$nowTime = date("Y-m-d H:i:s");
 if(($nowTime >= $contest['date_entry']) && ($nowTime < $contest['date_vote_1'])){ $status=1; }
 if(($nowTime >= $contest['date_vote_1']) && ($nowTime < $contest['date_winner'])){ $status=2; }
 if($nowTime >= $contest['date_winner']){ $status=3; }
