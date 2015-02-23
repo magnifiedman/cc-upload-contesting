@@ -54,29 +54,29 @@ include 'CCOMRheader.template'; // do not modify this line
 #masthead_topad { display:none; }
 </style>
 
-<!-- pagecontainer -->
-<div class="pageContainer">
+	<!-- pagecontainer -->
+	<div class="pageContainer">
 
 
-	<?php
+		<?php
 
-	// entry form
-	if($step==1){
-		?><iframe src="http://clearchannelphoenix.com/contest/add.php?r=<?php echo $_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']; ?>&e=<?php echo $error; ?>&b=<?php echo 'http://'.$_SERVER['HTTP_HOST'].'/common/contest/admin/'; ?>" frameborder="0" marginheight="0" marginwidth="0" width="990" height="1620" scrolling="no"></iframe><?php
-	}
+		// entry form iframe
+		if($step==1){
+			?><iframe src="http://iheartmediaphoenix.com/contest/add.php?r=<?php echo $_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']; ?>&e=<?php echo $error; ?>&b=<?php echo 'http://'.$_SERVER['HTTP_HOST'].'/common/contest/admin/'; ?>" frameborder="0" marginheight="0" marginwidth="0" width="990" height="1620" scrolling="no"></iframe><?php
+		}
 
 
-	// success
-	if($step==2){
-		echo '<!-- contest added -->';
-		echo '<a href="/common/contest/admin" class="button blue"><i class="fa fa-reply"></i> Back to Main</a>';
-		echo '<p class="success"><i class="fa fa-thumbs-up"></i> Good job Captain! Contest "<strong>' . stripslashes($_POST['name']) . '</strong>" has been successfully added.</p>';
+		// success
+		if($step==2){
+			echo '<!-- contest added -->';
+			echo '<a href="/common/contest/admin" class="button blue"><i class="fa fa-reply"></i> Back to Main</a>';
+			echo '<p class="success"><i class="fa fa-thumbs-up"></i> Good job Captain! Contest "<strong>' . stripslashes($_POST['name']) . '</strong>" has been successfully added.</p>';
 
-	}
-	?>
+		}
+		?>
 
-</div>
-<!-- end pagecontainer -->
+	</div>
+	<!-- end pagecontainer -->
 
 	<!-- <script src="<?php echo BASE_URL; ?>js/jquery-1.10.1.min.js"></script> -->
 	<script src="../<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>

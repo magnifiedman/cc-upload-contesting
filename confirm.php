@@ -85,7 +85,7 @@ include 'CCOMRheader.template'; // do not modify this line
 		
 		<!-- confirmation message -->
 		<p class="activated">Now you've done it. You've gone and confirmed your email address. We went ahead and placed your first vote in the system for <?php echo $entrantName; ?> while we were at it.<br /><br />
-			<a class="button" href="../contest/?<?php echo $urlCode; ?>"><i class="fa fa-long-arrow-left"></i> BACK TO CONTEST MAIN PAGE</a></p>
+		<a class="button" href="../contest/?<?php echo $urlCode; ?>"><i class="fa fa-long-arrow-left"></i> BACK TO CONTEST MAIN PAGE</a></p>
 
 	</div>
     
@@ -127,97 +127,95 @@ include 'CCOMRheader.template'; // do not modify this line
 </div>
 <!-- end pagecontainer -->
 
-<!-- <script src="<?php echo BASE_URL; ?>js/jquery-1.10.1.min.js"></script> -->
-	<script src="<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>
-	<script src="<?php echo BASE_URL; ?>js/jquery.validate.min.js"></script>
-	<script src="<?php echo BASE_URL; ?>js/jquery.fancybox.pack.js"></script>
-	<script src="<?php echo BASE_URL; ?>js/jquery.mousewheel-3.0.6.pack.js"></script>
-	<script>
-		var curSlide=1;
+<!-- local scripts -->
+<script src="<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>
+<script src="<?php echo BASE_URL; ?>js/jquery.validate.min.js"></script>
+<script src="<?php echo BASE_URL; ?>js/jquery.fancybox.pack.js"></script>
+<script src="<?php echo BASE_URL; ?>js/jquery.mousewheel-3.0.6.pack.js"></script>
+<script>
+	var curSlide=1;
 
-		$(document).ready(function() {
-				
-			$('.fancybox').fancybox();
-			$('#previewpop').fancybox();
-			$("#theForm").validate();
-			$(".theForm").validate();
+	$(document).ready(function() {
+			
+		$('.fancybox').fancybox();
+		$('#previewpop').fancybox();
+		$("#theForm").validate();
+		$(".theForm").validate();
 
-			var index = 0, hash = window.location.hash;
-			if (hash) {
-		        index = /\d+/.exec(hash)[0];
-		        index = (parseInt(index) || 1) - 1;
+		var index = 0, hash = window.location.hash;
+		if (hash) {
+	        index = /\d+/.exec(hash)[0];
+	        index = (parseInt(index) || 1) - 1;
+	    }
+
+		$('.flexslider').flexslider({
+	        startAt: index,
+	        slideshow: false,
+	        video:true,
+	        smoothHeight:true,
+	        start: function(slider){
+	          $('body').removeClass('loading');
+	        },
+	        after: function(slider) {
+		      var cs = slider.currentSlide;
+		      window.curSlide = cs+1;
+		      window.location.hash  = window.curSlide;
 		    }
 
-			$('.flexslider').flexslider({
-		        startAt: index,
-		        slideshow: false,
-		        video:true,
-		        smoothHeight:true,
-		        start: function(slider){
-		          $('body').removeClass('loading');
-		        },
-		        after: function(slider) {
-			      var cs = slider.currentSlide;
-			      window.curSlide = cs+1;
-			      window.location.hash  = window.curSlide;
-			    }
+	      });
 
-		      });
+		var adRatio;
+		adRatio=1;
+		var alt; 
 
-			var adRatio;
-			adRatio=1;
-			var alt; 
+		// track pageviews / change ads
+		$('.flex-next').click(function(event){
+			if(adRatio===4) { adRatio = 1; }
 
-			// track pageviews / change ads
-			$('.flex-next').click(function(event){
-				if(adRatio===4) { adRatio = 1; }
+			if(alt){ alt = ''; }
+	        else { alt = '-alt'; }
 
-				if(alt){ alt = ''; }
-		        else { alt = '-alt'; }
+	        viewframe.location.href='view'+alt+'.php?g=<?php echo $urlCode; ?>';
+	        if(adRatio===1) { adframe.location.href='ad.php?1'; }
+	        
+	        adRatio = adRatio+1;
+	      
+	    });
 
-		        viewframe.location.href='view'+alt+'.php?g=<?php echo $urlCode; ?>';
-		        if(adRatio===1) { adframe.location.href='ad.php?1'; }
-		        
-		        adRatio = adRatio+1;
-		      
-		    });
+	    $('.flex-prev').click(function(event){
+	        if(adRatio===4) { adRatio = 1; }
 
-		    $('.flex-prev').click(function(event){
-		        if(adRatio===4) { adRatio = 1; }
-	
-		        if(alt){ alt = ''; }
-		        else { alt = '-alt'; }
+	        if(alt){ alt = ''; }
+	        else { alt = '-alt'; }
 
-		        viewframe.location.href='view'+alt+'.php?g=<?php echo $urlCode; ?>';
-		        if(adRatio===1) { adframe.location.href='ad.php?2'; }
-		        
-		        adRatio = adRatio+1;
-		               
-		    });
+	        viewframe.location.href='view'+alt+'.php?g=<?php echo $urlCode; ?>';
+	        if(adRatio===1) { adframe.location.href='ad.php?2'; }
+	        
+	        adRatio = adRatio+1;
+	               
+	    });
 
-		    // show hide vote btn
-		    $('.vote-btn').click(function() {
-		    	$(this).closest( "li" ).children( ".vote-form-box" ).toggle();
-		    	$(this).children('span').text(($(this).children('span').text() == 'Vote For Me') ? 'Vote Below' : 'Vote For Me');
-		    	$(this).children('i').toggleClass('fa fa-thumbs-up');
-		    	$(this).children('i').toggleClass('fa fa-arrow-down');	
-		    });
+	    // show hide vote btn
+	    $('.vote-btn').click(function() {
+	    	$(this).closest( "li" ).children( ".vote-form-box" ).toggle();
+	    	$(this).children('span').text(($(this).children('span').text() == 'Vote For Me') ? 'Vote Below' : 'Vote For Me');
+	    	$(this).children('i').toggleClass('fa fa-thumbs-up');
+	    	$(this).children('i').toggleClass('fa fa-arrow-down');	
+	    });
 
-		});
+	});
 
-	
-	</script>
+</script>
 
-	<script type="text/javascript" src="/cc-common/wss/hbx.js"></script>
-	<script type="text/javascript">
-		<!-- 
-		s.pageName="contest:<?php echo $urlCode; ?>"
-		/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
-		var s_code=s.t();if(s_code)document.write(s_code)
-		//-->
-	</script>
-
-
+<script type="text/javascript" src="/cc-common/wss/hbx.js"></script>
+<!-- customizing page name for SiteCatalyst -->
+<script type="text/javascript">
+	<!-- 
+	s.pageName="contest:<?php echo $urlCode; ?>"
+	/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+	var s_code=s.t();if(s_code)document.write(s_code)
+	//-->
+</script>
 <!-- local scripts -->
 
 <?php include 'CCOMRfooter.template'; ?>

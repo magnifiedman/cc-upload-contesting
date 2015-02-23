@@ -58,7 +58,7 @@ include 'CCOMRheader.template'; // do not modify this line
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/jquery.fancybox.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/flexslider.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/font-awesome.min.css?x=<?php echo $x; ?>">
-<link href='http://fonts.googleapis.com/css?family=Nobile:400,700|Medula+One' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Nobile:400,700|Medula+One:400,700' rel='stylesheet' type='text/css'>
 <style>
 .pageContainer div.header {
 	background-image:url('<?php echo IMG_PATH.$contest['header_img']; ?>')!important;
@@ -78,11 +78,11 @@ include 'CCOMRheader.template'; // do not modify this line
 	</div>
 
 	<!-- content column -->
-	<div class="lCol">
+	<div class="lCol fullWidth">
 		
 		<?php
 		// entry form
-		if($step==1){ ?><iframe src="http://clearchannelphoenix.com/contest/enter.php?r=<?php echo $_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']; ?>&t=<?php echo $contest['contest_type']; ?>" frameborder="0" marginheight="0" marginwidth="0" width="660" height="1050" scrolling="no"></iframe><?php }
+		if($step==1){ ?><iframe src="http://iheartmediaphoenix.com/contest/enter.php?r=<?php echo $_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']; ?>&t=<?php echo $contest['contest_type']; ?>&esid=<?php echo $contest['esid']; ?>" frameborder="0" marginheight="0" marginwidth="0" width="930" height="3250" scrolling="no"></iframe><?php }
 		
 		// successful submission
 		if($step==2){ ?>
@@ -90,16 +90,25 @@ include 'CCOMRheader.template'; // do not modify this line
 			<h2>Thank you for your entry</h2>
 			<div class="callout-box">
 				<h3>Your Information</h3>
+				<?php if($contest['contest_type']==3){ ?><p><strong>Artist or Band Name</strong><?php echo trim($_POST['pgname']); ?></p><?php } ?>
 				<p><strong>Your Name:</strong> <?php echo trim($_POST['fname']).' '.trim($_POST['lname']).'<br />'; ?>
 				<strong>Your Email &amp; Phone: </strong> <?php echo trim($_POST['email']).' / '.trim($_POST['phone']); ?></p>
 				<p><strong>Your Entry:</strong><br />
 				<?php if($_POST['userfile']!=''){ ?><img src="<?php echo CONTEST_IMG_PATH.$_POST['userfile']; ?>" width="570" /></p><?php } ?>
-				<?php if($socialEmbed!=''){ echo $socialEmbed; ?></p><?php } ?>
+				<?php if($socialEmbed !=''){
+					echo $socialEmbed; ?></p>
+					<?php } ?>
 
 			</div>
 			<div class="callout-box">
 				<h3>What's the Next Step?</h3>
-				<p>Please allow 24-48 hours for us to review your submission. Once it is approved it will appear in the contest gallery sorted alphabetically by first name, last initial.</p>
+				<?php
+				if($contest['release_form']!=''){
+					if(substr_count($contest['release_form'],'http')>0){ ?><p><a href="<?php echo $contest['release_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> ESIGN RELEASE FORM</a></p><?php }
+		    		else { ?><p><a href="<?php echo FORM_PATH.$contest['release_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> PRINT AND FAX RELEASE FORM</a></p><?php } 
+		    	}?>
+				<p>Please allow 24-48 hours for us to review your submission. Once it is approved it will appear in the contest gallery sorted alphabetically by first name, last initial or group name.</p>
+				
 			</div>
 
 		<?php } 
@@ -110,52 +119,48 @@ include 'CCOMRheader.template'; // do not modify this line
 	</div>
     
 
-	<!-- sidebar column -->
+	<!-- sidebar column 
 	<div class="rCol">
       
-	    <!-- sharing buttons -->
+	    <!-- sharing buttons
 	    <div id="shareit">
 	    	Share this page:<br />
 	    	<a href="https://www.facebook.com/dialog/feed?app_id=<?php echo FB_APP_ID; ?>&link=<?php echo $shareLink; ?>&picture=<?php echo IMG_PATH . $contest['thumb_img']; ?>&name=<?php echo $page_title; ?>&caption=<?php echo $caption; ?>&description=<?php echo $contest['description']; ?>&redirect_uri=<?php echo $shareLink; ?>" target="_blank"><i class="fa fa-facebook-square fa-3x"></i></a>
 	    	<a href="http://twitter.com/share?text=<?php echo $contest['name'].'-'.$caption; ?>&url=<?php echo $shareLink; ?>" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>
 	    </div>
 
-	    <!-- box ad -->
+	    <!-- box ad
 	    <div class="adbox">
 	        <div id="DARTad300x250"><script>DFP.pushAd({div:"DARTad300x250",size:"300x250",position:"3307"} );</script></div>
 	    </div>
     
     
-	    <?php echo $contest['release_form']; if($contest['release_form']!=''){ ?>
-		    <!-- release form -->
+	    <?php if($contest['release_form']!=''){ ?>
+		    <!-- release form
 		    <div class="rulesbox rounded colored">
-		    <p><a href="pdf/<?php echo $contest['release_form']; ?>"><i class="fa fa-pencil-square-o fa-2x"></i> PARENTAL RELEASE FORM</a></p>
+		    <p><a href="<?php echo FORM_PATH.$contest['release_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> RELEASE FORM</a></p>
 		    </div>
 	    <?php } ?>
 
 	    <?php if($contest['rules_form']!=''){ ?>
-		    <!-- rules form -->
+		    <!-- rules form
 		    <div class="rulesbox rounded">
-		    <p><a href="pdf/<?php echo $contest['rules_form']; ?>"><i class="fa fa-pencil-square-o fa-2x"></i> CONTEST RULES</a></p>
+		    <p><a href="<?php echo FORM_PATH.$contest['rules_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> CONTEST RULES</a></p>
 		    </div>
 	    <?php } ?>
 
-		<!-- calendar -->
+		<!-- calendar
 		<div class="calendar">
 			<h3>Contest Calendar</h3>
 		    <?php echo $calendarHTML; ?>
 		</div>
 	    
-
-	    
-
-	</div>
+	</div> -->
 
 	<div class="clear"></div>
 
 </div>
 <!-- end pagecontainer -->
 
-<!-- local scripts -->
 
 <?php include 'CCOMRfooter.template'; ?>

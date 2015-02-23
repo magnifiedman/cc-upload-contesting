@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CC Upload Contesting Utility Class
  * Original Creation Date 05.2014
@@ -38,11 +37,12 @@ class Utility {
 	 */
 	function urlCode($title){
 			$replace="-";
-			$title = strtolower(preg_replace("/[^a-zA-Z0-9\.]/",$replace,$title));
-			$title = str_replace('.','',$title);
-			$title = str_replace('!','',$title);
-			$title = str_replace('?','',$title);
-			return $title;
+			$title1 = strtolower(preg_replace("/[^a-zA-Z0-9\.]/",$replace,$title));
+			$title2 = str_replace('.','',$title1);
+			$title3 = str_replace('!','',$title2);
+			$title4 = str_replace('?','',$title3);
+			$title5 = str_replace('--','-',$title4);
+			return $title5;
 	}
 
 
@@ -134,6 +134,11 @@ class Utility {
 			$embedCode = '<iframe src="http://player.vimeo.com/video/' . $id . '?title=0&amp;byline=0&amp;portrait=0" width="' . $w . '" height="' . $vheight . '" frameborder="0"></iframe>';
 		}
 
+		// soundcloud 
+		if(substr_count($link,'soundcloud')>=1){
+			$embedCode = '<div style="margin:20px;">'.stripslashes($link).'</div>';
+		}
+
 		return $embedCode;
 	}
 
@@ -146,6 +151,10 @@ class Utility {
 	 */
 	function hourSelect($fieldName, $curHour=''){
 		$html .= '<select name="' . $fieldName . '" class="halfcol">';
+		$html .= '<option value=""></option>';
+		$html .= '<option value="00:00"';
+		if($curHour=='00:00'){ $html .= ' selected="selected"'; }
+		$html .= '>12:00 Midnight</option>';
 		$html .= '<option value="01:00"';
 		if($curHour=='01:00'){ $html .= ' selected="selected"'; }
 		$html .= '>1:00 am</option>';
@@ -181,7 +190,7 @@ class Utility {
 		$html .= '>11:00 am</option>';
 		$html .= '<option value="12:00"';
 		if($curHour=='12:00'){ $html .= ' selected="selected"'; }
-		$html .= '>12:00 Noon/option>';
+		$html .= '>12:00 Noon</option>';
 		$html .= '<option value="13:00"';
 		if($curHour=='13:00'){ $html .= ' selected="selected"'; }
 		$html .= '>1:00 pm</option>';
@@ -214,15 +223,9 @@ class Utility {
 		$html .= '>10:00 pm</option>';
 		$html .= '<option value="23:00"';
 		if($curHour=='23:00'){ $html .= ' selected="selected"'; }
-		$html .= '>11:00 pm</option>';
-		$html .= '<option value="00:00"';
-		if($curHour=='00:00'){ $html .= ' selected="selected"'; }
-		$html .= '>12:00 Midnight</option>';
-	    
-
+		$html .= '>11:00 pm</option>';  
 		$html .= '</select>';
 		return $html;
-
 	}
 
 
@@ -243,11 +246,9 @@ class Utility {
 		$html .= '>Social Embed</option>';
 		$html .= '<option value="3" ';
 		if($contestType==3){ $html .= 'selected="selected"'; }
-		$html .= '>YouTube Embed</option>';
+		$html .= '>Battle of the Bands (Image and embed)</option>';
 		$html .= '</select>';
 		return $html;
 	}
 
-
 }
-

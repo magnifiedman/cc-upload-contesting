@@ -30,13 +30,12 @@ $calendarHTML = $c->getCalendar();
 $nowTime = date("Y-m-d H:i:s");
 
 $winnerMessage='';
-if(($nowTime >= $contest['date_entry']) && ($nowTime < $contest['date_vote_1'])){ $status=1; }
-if(($nowTime >= $contest['date_vote_1']) && ($nowTime < $contest['date_winner'])){ $status=2; }
-if($nowTime >= $contest['date_winner']){ $status=3; }
+if($nowTime >= $contest['date_entry']){ $status=1; }
+if(($nowTime >= $contest['date_vote_1'] && $contest['date_vote_1'] != '0000-00-00 00:00:00' && $nowTime < $contest['date_winner'])){ $status=2; }
+if($nowTime >= $contest['date_winner'] && $contest['date_winner'] != '0000-00-00 00:00:00'){ $status=3; }
 if($status==3){ $winnerMessage= $c->getWinnerMessage($contest['id']); }
 
-
-
+if($contest['suspend_voting']=='y') { $status=5; }
 //updated local page template
 include_once('/export/home/common/template/T25globalincludes'); // do not modify this line
 include_once (CDB_REFACTOR_ROOT."feed2.tool"); // do not modify this line
@@ -53,7 +52,7 @@ include 'CCOMRheader.template'; // do not modify this line
 
 
 <!-- stylesheets -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>css/style.css?x=<?php echo $x; ?>" media="screen" />
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>css/style.css?a=<?php echo $x; ?>" media="screen" />
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/jquery.fancybox.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/flexslider.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/font-awesome.min.css?x=<?php echo $x; ?>">
@@ -93,6 +92,11 @@ include 'CCOMRheader.template'; // do not modify this line
         echo '<a href="view.php?' . $urlCode . '" class="button big view">View Entrants</a>'."\n";
         $caption = 'We Have Our Winner(s)!';
         break;
+
+       case 5: // winner
+        //echo '<a href="view.php?' . $urlCode . '" class="button big view">View Entrants</a>'."\n";
+        //$caption = 'We Have Our Winner(s)!';
+        break;
     }
     
     ?>
@@ -104,10 +108,10 @@ include 'CCOMRheader.template'; // do not modify this line
   <!-- content column -->
   <div class="lCol">
 
-    <h2><?php echo $contest['heading']; ?></h2>
+    <h2><?php echo stripslashes($contest['heading']); ?></h2>
     <?php echo $winnerMessage; ?>
 
-    <?php echo $contest['body']; ?>
+    <?php echo stripslashes($contest['body']); ?>
 
     <?php
     if($contest['sponsor_text_1']!=''){
@@ -118,7 +122,7 @@ include 'CCOMRheader.template'; // do not modify this line
 		<div class="sponsorbox rounded">
 			<?php if($contest['sponsor_img_1']!=''){ ?><a href="<?php echo $contest['sponsor_url_1']; ?>" target="_blank"><img src="<?php echo SPONSOR_PATH.$contest['sponsor_img_1'];?>" border="0" alt="<?php echo $contest['sponsor_name_1']; ?>" /></a> <?php } ?>
 			<p class="pullup"><strong><a href="<?php echo $contest['sponsor_url_1']; ?>" target="_blank"><?php echo $contest['sponsor_name_1']; ?></a></strong></p>
-			<?php echo $contest['sponsor_text_1']; ?>
+			<?php echo stripslashes($contest['sponsor_text_1']); ?>
 			<div class="clear"></div>
 		</div>
     
@@ -131,7 +135,7 @@ include 'CCOMRheader.template'; // do not modify this line
 		<div class="sponsorbox rounded">
 			<?php if($contest['sponsor_img_2']!=''){ ?><a href="<?php echo $contest['sponsor_url_2']; ?>" target="_blank"><img src="<?php echo SPONSOR_PATH.$contest['sponsor_img_2'];?>" border="0" alt="<?php echo $contest['sponsor_name_2']; ?>" /></a> <?php } ?>
 			<p class="pullup"><strong><a href="<?php echo $contest['sponsor_url_2']; ?>" target="_blank"><?php echo $contest['sponsor_name_2']; ?></a></strong></p>
-			<?php echo $contest['sponsor_text_2']; ?>
+			<?php echo stripslashes($contest['sponsor_text_2']); ?>
 			<div class="clear"></div>
 		</div>
     
@@ -144,7 +148,7 @@ include 'CCOMRheader.template'; // do not modify this line
 		<div class="sponsorbox rounded">
 			<?php if($contest['sponsor_img_3']!=''){ ?><a href="<?php echo $contest['sponsor_url_3']; ?>" target="_blank"><img src="<?php echo SPONSOR_PATH.$contest['sponsor_img_3'];?>" border="0" alt="<?php echo $contest['sponsor_name_3']; ?>" /></a> <?php } ?>
 			<p class="pullup"><strong><a href="<?php echo $contest['sponsor_url_3']; ?>" target="_blank"><?php echo $contest['sponsor_name_3']; ?></a></strong></p>
-			<?php echo $contest['sponsor_text_3']; ?>
+			<?php echo stripslashes($contest['sponsor_text_3']); ?>
 			<div class="clear"></div>
 		</div>
     
@@ -170,11 +174,11 @@ include 'CCOMRheader.template'; // do not modify this line
 	        <div id="DARTad300x250"><script>DFP.pushAd({div:"DARTad300x250",size:"300x250",position:"3307"} );</script></div>
 	    </div>
     
-    
 	    <?php if($contest['release_form']!=''){ ?>
 		    <!-- release form -->
 		    <div class="rulesbox rounded colored">
-		    <p><a href="<?php echo FORM_PATH.$contest['release_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> RELEASE FORM</a></p>
+		    <?php if(substr_count($contest['release_form'],'http')>0){ ?><p><a href="<?php echo $contest['release_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> RELEASE FORM</a></p><?php }
+		    else { ?><p><a href="<?php echo FORM_PATH.$contest['release_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> RELEASE FORM</a></p><?php } ?>
 		    </div>
 	    <?php } ?>
 
@@ -184,14 +188,13 @@ include 'CCOMRheader.template'; // do not modify this line
 		    <p><a href="<?php echo FORM_PATH.$contest['rules_form']; ?>" target="_blank"><i class="fa fa-pencil-square-o"></i> CONTEST RULES</a></p>
 		    </div>
 	    <?php } ?>
-
+	
 		<!-- calendar -->
 		<div class="calendar">
 			<h3>Contest Calendar</h3>
-		    <?php echo $calendarHTML; ?>
+			<?php echo $calendarHTML; ?>
 		</div>
 	    
-
 
 	</div>
 
@@ -199,7 +202,5 @@ include 'CCOMRheader.template'; // do not modify this line
 
 </div>
 <!-- end pagecontainer -->
-
-<!-- local scripts -->
 
 <?php include 'CCOMRfooter.template'; ?>

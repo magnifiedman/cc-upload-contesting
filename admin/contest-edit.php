@@ -23,14 +23,16 @@ $contest = $c->getContestDetails($_GET['id']);
 if($contest['header_img']==''){ $header_img = 'no-header.jpg'; } else { $header_img = $contest['header_img']; }
 if($contest['thumb_img']==''){ $thumb_img = 'no-thumb.jpg'; } else { $thumb_img = $contest['thumb_img']; }
 if($contest['rules_form']==''){ $rules_msg = '<i class="fa fa-exclamation-triangle"></i> No Rules Uploaded'; } else { $rules_msg = '<a href="' . FORM_PATH . $contest['rules_form'] .'"><i class="fa fa-check-circle"></i> Rules Uploaded</a>'; }
-if($contest['release_form']==''){ $permission_msg = '<i class="fa fa-exclamation-triangle"></i> No Permission Form Uploaded'; } else { $permission_msg = '<a href="' . FORM_PATH.  $contest['release_form'] . '"><i class="fa fa-check-circle"></i> Rules Uploaded</a>'; }
+if($contest['release_form']==''){ $permission_msg = '<i class="fa fa-exclamation-triangle"></i> No Permission Form Uploaded'; } else { $permission_msg = '<a href="' . FORM_PATH.  $contest['release_form'] . '"><i class="fa fa-check-circle"></i> Permission Form Uploaded</a>'; }
 
 if($contest['sponsor_img_1']==''){ $sponsor_img_1 = 'no-thumb.jpg'; } else { $sponsor_img_1 = $contest['sponsor_img_1']; }
 if($contest['sponsor_img_2']==''){ $sponsor_img_2 = 'no-thumb.jpg'; } else { $sponsor_img_2 = $contest['sponsor_img_2']; }
 if($contest['sponsor_img_3']==''){ $sponsor_img_3 = 'no-thumb.jpg'; } else { $sponsor_img_3 = $contest['sponsor_img_3']; }
 
-$selectEntry =  Utility::hourSelect('hour_entry', substr($contest['date_entry'],11,5));
-$selectVote =   Utility::hourSelect('hour_vote',  substr($contest['date_vote_1'],11,5));
+$selectEntry = Utility::hourSelect('hour_entry', substr($contest['date_entry'],11,5));
+$selectVote1 = Utility::hourSelect('hour_vote_1', substr($contest['date_vote_1'],11,5));
+if($contest['date_vote_2']!='0000-00-00 00:00:00'){ $selectVote2 = Utility::hourSelect('hour_vote_2', substr($contest['date_vote_2'],11,5)); } else { $selectVote2 = Utility::hourSelect('hour_vote_2'); }
+if($contest['date_vote_3']!='0000-00-00 00:00:00'){ $selectVote3 = Utility::hourSelect('hour_vote_3', substr($contest['date_vote_3'],11,5)); } else { $selectVote3 = Utility::hourSelect('hour_vote_3'); }
 $selectWinner = Utility::hourSelect('hour_winner',substr($contest['date_winner'],11,5));
 
 // logged in?
@@ -41,20 +43,22 @@ if(isset($_POST['editFiles'])){
 
 	if($a->doContest($_POST,'edit-files')){
 
-		$contest = $c->getContestDetails($_GET['id']);
+		//$contest = $c->getContestDetails($_GET['id']);
 
 		// set defaults
 		if($contest['header_img']==''){ $header_img = 'no-header.jpg'; } else { $header_img = $contest['header_img']; }
 		if($contest['thumb_img']==''){ $thumb_img = 'no-thumb.jpg'; } else { $thumb_img = $contest['thumb_img']; }
 		if($contest['rules_form']==''){ $rules_msg = '<i class="glyphicon glyphicon-exclamation-sign"></i> No Rules Uploaded'; } else { $rules_msg = '<a href="' . FORM_PATH . $contest['rules_form'] .'"><i class="glyphicon glyphicon-ok"></i> Rules Uploaded</a>'; }
-		if($contest['release_form']==''){ $permission_msg = '<i class="glyphicon glyphicon-exclamation-sign"></i> No Permission Form Uploaded'; } else { $permission_msg = '<a href="' . FORM_PATH.  $contest['release_form'] . '"><i class="glyphicon glyphicon-ok"></i> Rules Uploaded</a>'; }
+		if($contest['release_form']==''){ $permission_msg = '<i class="glyphicon glyphicon-exclamation-sign"></i> No Permission Form Uploaded'; } else { $permission_msg = '<a href="' . FORM_PATH.  $contest['release_form'] . '"><i class="glyphicon glyphicon-ok"></i> Permission Form Uploaded</a>'; }
 
 		if($contest['sponsor_img_1']==''){ $sponsor_img_1 = 'no-thumb.jpg'; } else { $sponsor_img_1 = $contest['sponsor_img_1']; }
 		if($contest['sponsor_img_2']==''){ $sponsor_img_2 = 'no-thumb.jpg'; } else { $sponsor_img_2 = $contest['sponsor_img_2']; }
 		if($contest['sponsor_img_3']==''){ $sponsor_img_3 = 'no-thumb.jpg'; } else { $sponsor_img_3 = $contest['sponsor_img_3']; }
 
-		$selectEntry =  Utility::hourSelect('hour_entry', substr($contest['date_entry'],11,5));
-		$selectVote =   Utility::hourSelect('hour_vote',  substr($contest['date_vote_1'],11,5));
+		$selectEntry = Utility::hourSelect('hour_entry',substr($contest['date_entry'],11,5));
+		$selectVote1 = Utility::hourSelect('hour_vote',substr($contest['date_vote_1'],11,5));
+		$selectVote2 = Utility::hourSelect('hour_vote',substr($contest['date_vote_2'],11,5));
+		$selectVote3 = Utility::hourSelect('hour_vote',substr($contest['date_vote_3'],11,5));
 		$selectWinner = Utility::hourSelect('hour_winner',substr($contest['date_winner'],11,5));
 
 		$step = 1;
@@ -118,7 +122,7 @@ include 'CCOMRheader.template'; // do not modify this line
 	if($step==2){
 		?>
 		
-		<iframe src="http://clearchannelphoenix.com/contest/edit.php?r=<?php echo $_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']; ?>&e=<?php echo $error; ?>&b=<?php echo 'http://'.$_SERVER['HTTP_HOST'].'/common/contest/admin/'; ?>&name=<?php echo urlencode($contest['name']); ?>&header_img=<?php echo urlencode($contest['header_img']); ?>&thumb_img=<?php echo urlencode($contest['thumb_img']); ?>&rules_form=<?php echo urlencode($contest['rules_form']); ?>&release_form=<?php echo urlencode($contest['release_form']); ?>&sponsor_img_1=<?php echo urlencode($contest['sponsor_img_1']); ?>&sponsor_img_2=<?php echo urlencode($contest['sponsor_img_2']); ?>&sponsor_img_3=<?php echo urlencode($contest['sponsor_img_3']); ?>" frameborder="0" marginheight="0" marginwidth="0" width="990" height="1620" scrolling="no"></iframe>
+		<iframe src="http://iheartmediaphoenix.com/contest/edit.php?r=<?php echo $_SERVER['SCRIPT_URI'].'?'.$_SERVER['QUERY_STRING']; ?>&e=<?php echo $error; ?>&b=<?php echo 'http://'.$_SERVER['HTTP_HOST'].'/common/contest/admin/'; ?>&name=<?php echo urlencode($contest['name']); ?>&header_img=<?php echo urlencode($contest['header_img']); ?>&thumb_img=<?php echo urlencode($contest['thumb_img']); ?>&rules_form=<?php echo urlencode($contest['rules_form']); ?>&release_form=<?php echo urlencode($contest['release_form']); ?>&sponsor_img_1=<?php echo urlencode($contest['sponsor_img_1']); ?>&sponsor_img_2=<?php echo urlencode($contest['sponsor_img_2']); ?>&sponsor_img_3=<?php echo urlencode($contest['sponsor_img_3']); ?>" frameborder="0" marginheight="0" marginwidth="0" width="990" height="1620" scrolling="no"></iframe>
 
 		<?php
 	}
@@ -174,22 +178,28 @@ include 'CCOMRheader.template'; // do not modify this line
                 <!-- contest details -->
                 <p><label>Contest Name *</label><input type="text" name="name" class="required" value="<?php echo stripslashes($contest['name']); ?>" ></p>
                 <p><label>Contest Type *</label><?php echo $contestTypeSelect; ?></p>
+                <p><label>Suspend Voting? (For weight loss contests)</label><input type="checkbox" name="suspend_voting" value="y" <?php if($contest['suspend_voting']=='y'){ echo 'checked="checked"'; } ?>></p>
                 <p><label>Contest Description *</label><textarea name="description" class="required"><?php echo htmlentities($contest['description']); ?></textarea></p>
                 <p><label>Contest Keywords (Separate with commas)</label><input type="text" name="keywords" class="" value="<?php echo $contest['keywords']; ?>" /></p>
-                <p><label>Contest Page Heading Text *</label><input type="text" name="heading" class="required" value="<?php echo $contest['heading']; ?>" /></p>
-                <p><label>Contest Page Body Text *</label><textarea class="ckeditor required" cols="80" id="editor1" name="body_text" rows="10"><?php echo htmlentities($contest['body']); ?></textarea></p>
-                <p class="dates"><label>Contest Entry Start Date:</label><input type="text" name="date_entry" class="halfcol datepicker required" value="<?php echo substr($contest['date_entry'],0,10); ?>" /> @ <?php echo $selectEntry; ?></p>
-                <p class="dates"><label>Contest Voting Start Date:</label><input type="text" name="date_vote_1" class="halfcol datepicker required" value="<?php echo substr($contest['date_vote_1'],0,10); ?>" /> @ <?php echo $selectVote; ?></p>
-                <p class="dates"><label>Contest Voting End Date:</label><input type="text" name="date_winner" class="halfcol datepicker required" value="<?php echo substr($contest['date_winner'],0,10); ?>" /> @ <?php echo $selectWinner; ?></p>
+                <p><label>E-Sign ID</label><input type="text" name="esid" class="" value="<?php echo $contest['esid']; ?>" /></p>
+                <p><label>Contest Page Heading Text *</label><input type="text" name="heading" class="required" value="<?php echo stripslashes($contest['heading']); ?>" /></p>
+                <p><label>Contest Page Body Text *</label><textarea class="ckeditor required" cols="80" id="editor1" name="body_text" rows="10"><?php echo htmlentities(stripslashes($contest['body'])); ?></textarea></p>
+                <p class="dates"><label>Contest Entry Date:</label><input type="text" name="date_entry" class="halfcol datepicker required" value="<?php echo substr($contest['date_entry'],0,10); ?>" /> @ <?php echo $selectEntry; ?></p>
+                <p class="dates"><label>Contest Round 1 Voting Start Date:</label><input type="text" name="date_vote_1" class="halfcol datepicker required" value="<?php echo substr($contest['date_vote_1'],0,10); ?>" /> @ <?php echo $selectVote1; ?></p>
+                <p class="dates"><label>Contest Round 2 Voting Start Date:</label><input type="text" name="date_vote_2" class="halfcol datepicker" value="<?php if($contest['date_vote_2']!='0000-00-00 00:00:00'){ echo substr($contest['date_vote_2'],0,10); } ?>" /> @ <?php echo $selectVote2; ?></p>
+                <p class="dates"><label>Contest Round 3 Voting Start Date:</label><input type="text" name="date_vote_3" class="halfcol datepicker" value="<?php if($contest['date_vote_3']!='0000-00-00 00:00:00'){ echo substr($contest['date_vote_3'],0,10); } ?>" /> @ <?php echo $selectVote3; ?></p>
+                <p class="dates"><label>Contest All Voting End Date:</label><input type="text" name="date_winner" class="halfcol datepicker required" value="<?php echo substr($contest['date_winner'],0,10); ?>" /> @ <?php echo $selectWinner; ?></p>
             	
+
+            	<!-- sponsor -->
             	<a class="button" id="sponsors" style="margin:20px 0;"><i class="fa fa-plus"></i> I Need to Update Sponsor Info</a>
             	<div id="sponsor-div" style="display:none;">
                     <p><label>Sponsor 1</label><input type="text" name="sponsor_name_1" class="halfcol" placeholder="Name" value="<?php echo $contest['sponsor_name_1']; ?>" /><input type="text" name="sponsor_url_1" class="halfcol" placeholder="URL" value="<?php echo $contest['sponsor_url_1']; ?>" /><br />
-                    <textarea name="sponsor_text_1" class="ckeditor" rows="3"><?php echo $contest['sponsor_text_1']; ?></textarea></p>
+                    <textarea name="sponsor_text_1" class="ckeditor" rows="3"><?php echo stripslashes($contest['sponsor_text_1']); ?></textarea></p>
                     <p><label>Sponsor 2</label><input type="text" name="sponsor_name_2" class="halfcol" placeholder="Name" value="<?php echo $contest['sponsor_name_2']; ?>" /><input type="text" name="sponsor_url_2" class="halfcol" placeholder="URL" value="<?php echo $contest['sponsor_url_2']; ?>"  /><br />
-                    <textarea name="sponsor_text_2" class="ckeditor" rows="3"><?php echo $contest['sponsor_text_2']; ?></textarea></p>
+                    <textarea name="sponsor_text_2" class="ckeditor" rows="3"><?php echo stripslashes($contest['sponsor_text_2']); ?></textarea></p>
                     <p><label>Sponsor 3</label><input type="text" name="sponsor_name_3" class="halfcol" placeholder="Name" value="<?php echo $contest['sponsor_name_3']; ?>" /><input type="text" name="sponsor_url_3" class="halfcol" placeholder="URL" value="<?php echo $contest['sponsor_url_3']; ?>" /><br />
-                    <textarea name="sponsor_text_3" class="ckeditor" rows="3"><?php echo $contest['sponsor_text_3']; ?></textarea></p>
+                    <textarea name="sponsor_text_3" class="ckeditor" rows="3"><?php echo stripslashes($contest['sponsor_text_3']); ?></textarea></p>
                 </div><p><label></label><input type="submit" class="button blue" value="Update Contest Details" style="margin:20px 0;" /></p>
             </form>
 
@@ -198,7 +208,7 @@ include 'CCOMRheader.template'; // do not modify this line
 </div>
 <!-- end pagecontainer -->
 
-	<!-- <script src="<?php echo BASE_URL; ?>js/jquery-1.10.1.min.js"></script> -->
+	<!-- local scripts -->
 	<script src="../<?php echo BASE_URL; ?>js/jquery-ui.min.js"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.validate.min.js"></script>
@@ -210,7 +220,7 @@ include 'CCOMRheader.template'; // do not modify this line
 				
 			$('.fancybox').fancybox();
 			$(".theForm").validate();
-			$( ".datepicker" ).datepicker({ dateFormat: "yy-mm-dd" });
+			$(".datepicker").datepicker({ dateFormat: "yy-mm-dd" });
 
 			$('#sponsors').click(function(){
 		      $("#sponsor-div").toggle();
@@ -220,6 +230,7 @@ include 'CCOMRheader.template'; // do not modify this line
 
 	
 	</script>
+	<!-- end local scripts -->
 
 
 <?php include 'CCOMRfooter.template'; ?>

@@ -78,7 +78,7 @@ include 'CCOMRheader.template'; // do not modify this line
 </div>
 <!-- end pagecontainer -->
 
-<!-- <script src="<?php echo BASE_URL; ?>js/jquery-1.10.1.min.js"></script> -->
+	<!-- local scripts -->
 	<script src="../<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.validate.min.js"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.fancybox.pack.js"></script>
@@ -97,6 +97,7 @@ include 'CCOMRheader.template'; // do not modify this line
 	</script>
 
 	<script type="text/javascript" src="/cc-common/wss/hbx.js"></script>
+	<!-- set custom page name for SiteCatalyst -->
 	<script type="text/javascript">
 		<!-- 
 		s.pageName="contest:<?php echo $urlCode; ?>"
@@ -104,7 +105,6 @@ include 'CCOMRheader.template'; // do not modify this line
 		var s_code=s.t();if(s_code)document.write(s_code)
 		//-->
 	</script>
-
-<!-- local scripts -->
+	<!-- local scripts -->
 
 <?php include 'CCOMRfooter.template'; ?>

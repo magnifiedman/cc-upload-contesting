@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * CC Upload Contesting Contest Class
@@ -10,6 +9,7 @@
  * 
  */
 class Contest{
+
 
 	/**
 	 * Sets url code
@@ -68,11 +68,12 @@ class Contest{
     		$calendarHTML = '<ul class="calendar">';
     		$row = mysql_fetch_assoc($r);
     		$calendarHTML .= '<li><strong>Contest Entry Starts:</strong><br />'.date("M jS @ h:ia",strtotime($row['de'])).'</li>';
-    		$calendarHTML .= '<li><strong>Voting Starts:</strong><br />'.date("M jS @ h:ia",strtotime($row['dv1'])).'</li>';
-    		//if($row['dv2']!='0000-00-00 00:00:00'){ $calendarHTML .= '<li><strong>Top ' . $row['ev2'] . ' Voting Starts:</strong><br />'.date("M jS @ h:ia",strtotime($row['dv2'])).'</li>'; }
-			if($row['dw']!='0000-00-00 00:00:00'){ $calendarHTML .= '<li><strong>Voting Ends:</strong><br />'.date("M jS @ h:ia",strtotime($row['dw'])).'</li>'; }
+    		if($row['dv1']!='0000-00-00 00:00:00'){ $calendarHTML .= '<li><strong>Voting Starts:</strong><br />'.date("M jS @ h:ia",strtotime($row['dv1'])).'</li>'; }
+    		if($row['dv2']!='0000-00-00 00:00:00'){ $calendarHTML .= '<li><strong>Round 2 Voting Starts:</strong><br />'.date("M jS @ h:ia",strtotime($row['dv2'])).'</li>'; }
+			if($row['dv3']!='0000-00-00 00:00:00'){ $calendarHTML .= '<li><strong>Round 3 Voting Starts:</strong><br />'.date("M jS @ h:ia",strtotime($row['dv3'])).'</li>'; }
+            if($row['dw']!='0000-00-00 00:00:00'){ $calendarHTML .= '<li><strong>Voting Ends / Winner Announced:</strong><br />'.date("M jS @ h:ia",strtotime($row['dw'])).'</li>'; }
 
-    		$calendarHTML .= '</li>';
+    		$calendarHTML .= '</li></ul>';
     		return $calendarHTML;
     	}
     }
@@ -102,9 +103,9 @@ class Contest{
 
                 $q = sprintf("
                 INSERT into " . ENTRANT_TABLE ."
-                (contest_id,fname,lname,pgname,email,phone,userfile,social_link,misc_1,misc_2,misc_3,status)
+                (contest_id,date_entered, fname,lname,pgname,email,phone,userfile,social_link,misc_1,misc_2,misc_3,status)
                 values
-                ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','1')",
+                ('%s',NOW(),'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','1')",
                 mysql_real_escape_string($contestID),
                 mysql_real_escape_string(trim($vars['fname'])),
                 mysql_real_escape_string(trim($vars['lname'])),
@@ -152,7 +153,7 @@ class Contest{
         $totEntrants = mysql_result($totq,0,'count(id)');
         
         // get total active and figure out how many galleries to show (1 or 4)
-        if($totEntrants > SLIDES_PERGALLERY_MAX){ $perGallery = SLIDES_PERGALLERY_MAX; }
+        if($totEntrants > SLIDES_PERGALLERY_MAX){ $perGallery = ceil($totEntrants/4); }
         else { $perGallery = $totEntrants; }
 
         // figure result subset according to gallery clieked
@@ -165,15 +166,23 @@ class Contest{
             FROM " . ENTRANT_TABLE . "
             WHERE contest_id = '". $contestID ."' 
             AND status=2 
-            ORDER BY fname asc, lname asc
+            ORDER BY pgname asc, fname asc, lname asc
             LIMIT $offset,$perGallery");
 
         if(mysql_num_rows($q)>0){ 
             $slides = array();
             while ($slide = mysql_fetch_assoc($q)){
+                $slide['lname'] = substr($slide['lname'],0,1) . '.';
                 if($contestType==1){ $slide['embedCode'] = '<img src="'.CONTEST_IMG_PATH.$slide['userfile'].'" />'; }
                 if($contestType==2){ $slide['embedCode'] = Utility::getEmbed($slide['social_link'],'l'); }
+                if($contestType==3){ 
+                    $slide['embedCode'] = Utility::getEmbed($slide['social_link'],'l');
+                    $slide['img'] = '<a class="fancybox" href="'.CONTEST_IMG_PATH.$slide['userfile'].'"><img src="'.CONTEST_IMG_PATH.$slide['userfile'].'" style="margin-left:20px; width:100px!important;" /></a>';
+                    $slide['fname'] = $slide['pgname'];
+                    $slide['lname'] = '';
+                }
                 $slides[] = $slide;
+
             }
             return $slides;
         }
@@ -246,7 +255,7 @@ class Contest{
 
                 if($i==$galleryNumber){ $class='thumb-active'; }
                 else { $class=''; }
-                $html .= '<div class="thumb-box ' . $class . '"><a href="view.php?' . $urlCode . '&g=' . $i . '">'.$startName.'<br />to<br />'.$endName.'.<br />'.$thumbImg.'</a></div>';
+                $html .= '<div class="thumb-box ' . $class . '"><a href="view.php?' . $urlCode . '&g=' . $i . '">'.stripslashes($startName).'<br />to<br />'.stripslashes($endName).'.<br />'.$thumbImg.'</a></div>';
                 
                 $i++;
             }
@@ -296,7 +305,6 @@ class Contest{
         $html .= '</p>';
         return $html;
 
-    }
-	
+    }	
 
 }

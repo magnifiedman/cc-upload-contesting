@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CC Upload Contesting Admin Class
  * Original Creation Date 05.2014
@@ -32,6 +31,7 @@ class Admin{
 
 	### contests ###
 	
+
 	/**
 	 * gets total number of contests
 	 * @return integer total contests in system
@@ -71,23 +71,25 @@ class Admin{
 
 		$r = mysql_query("SELECT *
 			FROM " . CONTEST_TABLE . "
-			ORDER BY date_entry DESC 
+			ORDER BY date_winner DESC 
 			LIMIT " . $offset . ", " . $perpage);
 
 		$hiddenHTML = '';
 
 		if($r){
 			// pagination
-			
+			$class='';
 			$html = '<table class="adminTable">';
 			$html .= '<tr>';
-			$html .= '<th>Start Date</th><th>Contest</th><th>Entrants</th><th class="tcenter">Manage</th><th class="tcenter">Preview</th><th class="tcenter">Edit</th><th class="tcenter"></th>';
+			$html .= '<th>Start Date</th><th>End Date</th><th>Contest</th><th>Entrants</th><th class="tcenter">Manage</th><th class="tcenter">Preview</th><th class="tcenter">Edit</th><th class="tcenter"></th>';
 			$html .= '</tr>';
 
 			while($contest = mysql_fetch_assoc($r)){
 				$totalEntrants = $this->getTotalEntrantsContest($contest['id']);
-				$html .= '<tr>';
+				if($contest['date_winner']<date("Y-m-d")){ $class='class="expired"'; }
+				$html .= '<tr ' . $class . '>';
 				$html .= '<td>' . date("m.d.Y",strtotime($contest['date_entry'])) . '</td>';
+				$html .= '<td>' . date("m.d.Y",strtotime($contest['date_winner'])) . '</td>';
 				$html .= '<td>' . stripslashes($contest['name']) . '</td>';
 				$html .= '<td>' . $totalEntrants . '</td>';
 				$html .= '<td class="tcenter"><a href="contest-manage.php?id=' . $contest['id'] . '"><i class="fa fa-user"></i> Manage</a></td>';
@@ -96,7 +98,7 @@ class Admin{
 				$html .= '<td class="tcenter"><a href="#delete' . $contest['id'] . '" class="fancybox"><i class="fa fa-trash-o"></i></a></td>';
 				$html .= '</tr>';
 				$hiddenHTML .= '<div id="delete' . $contest['id'] . '" style="width:400px;display:none;"><h3>Are you sure you want to delete:</h3><h2>'.$contest['name'].'?</h2><form action="" method="post"><input type="hidden" name="deleteForm" value="y" /><input type="hidden" name="id" value="' . $contest['id'] . '" /><input type="submit" class="button blue" value="Delete" /></form></div>'."\n";
-			
+				$class='';
 
 			}
 
@@ -170,6 +172,7 @@ class Admin{
 			$title = str_replace('.','',$title);
 			$title = str_replace('!','',$title);
 			$title = str_replace('?','',$title);
+			$title = str_replace('--','-',$title);
 			return $title;
 	}
 
@@ -185,12 +188,13 @@ class Admin{
 			case 'add':
 			$urlCode = $this->urlCode($vars['name']);
 			$q = sprintf("INSERT into " . CONTEST_TABLE . "
-				(status,contest_type,name,description,keywords,heading,body,url_code,date_entry,date_vote_1,date_winner,header_img,thumb_img,rules_form, release_form, sponsor_name_1,sponsor_img_1,sponsor_url_1,sponsor_text_1,sponsor_name_2,sponsor_img_2,sponsor_url_2,sponsor_text_2,sponsor_name_3,sponsor_img_3,sponsor_url_3,sponsor_text_3)
+				(status,contest_type,name,description,keywords,heading,body,url_code,date_entry,date_vote_1,date_vote_2,date_vote_3,date_winner,header_img,thumb_img,rules_form, release_form, sponsor_name_1,sponsor_img_1,sponsor_url_1,sponsor_text_1,sponsor_name_2,sponsor_img_2,sponsor_url_2,sponsor_text_2,sponsor_name_3,sponsor_img_3,sponsor_url_3,sponsor_text_3)
 				VALUES 
-				(1,'" . $vars['contest_type'] . "', '%s', '%s', '%s', '%s', '%s', '" . $urlCode ."', '" . $vars['date_entry']." ".$vars['hour_entry'] . "', '" . $vars['date_vote']." ".$vars['hour_vote'] . "', '" . $vars['date_winner']." ".$vars['hour_winner'] . "', '" . $_POST['header_img'] . "', '" . $_POST['thumb_img'] . "', '" . $_POST['rules_form'] . "', '" . $_POST['release_form'] . "', '%s', '" . $_POST['sponsor_img_1'] . "', '%s', '%s', '%s', '" . $_POST['sponsor_img_2'] . "', '%s', '%s', '%s', '" . $_POST['sponsor_img_1'] . "', '%s', '%s')",
+				(1,'" . $vars['contest_type'] . "', '%s', '%s', '%s', '%s', '%s', '%s', '" . $urlCode ."', '" . $vars['date_entry']." ".$vars['hour_entry'] . "', '" . $vars['date_vote_1']." ".$vars['hour_vote_1'] . "', '" . $vars['date_vote_2']." ".$vars['hour_vote_2'] . "', '" . $vars['date_vote_3']." ".$vars['hour_vote_3'] . "', '" . $vars['date_winner']." ".$vars['hour_winner'] . "', '" . $_POST['header_img'] . "', '" . $_POST['thumb_img'] . "', '" . $_POST['rules_form'] . "', '" . $_POST['release_form'] . "', '%s', '" . $_POST['sponsor_img_1'] . "', '%s', '%s', '%s', '" . $_POST['sponsor_img_2'] . "', '%s', '%s', '%s', '" . $_POST['sponsor_img_1'] . "', '%s', '%s')",
 				mysql_real_escape_string(htmlspecialchars($vars['name'],ENT_QUOTES)),
 				mysql_real_escape_string(htmlspecialchars($vars['description'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['keywords']),
+				mysql_real_escape_string($vars['esid']),
 				mysql_real_escape_string(htmlspecialchars($vars['heading'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['body_text']),
 				mysql_real_escape_string($vars['sponsor_name_1']),
@@ -213,13 +217,17 @@ class Admin{
 				$q = sprintf("UPDATE " . CONTEST_TABLE . "
 				set contest_type = '%s',
 				name = '%s',
+				suspend_voting = '" . $vars['suspend_voting'] . "',
 				url_code = '" . $urlCode . "',
 				description = '%s',
 				keywords = '%s',
+				esid = '%s',
 				heading = '%s',
 				body = '%s',
 				date_entry = '" . $vars['date_entry']." ".$vars['hour_entry'] . "',
-				date_vote_1 = '" . $vars['date_vote_1']." ".$vars['hour_vote'] . "',
+				date_vote_1 = '" . $vars['date_vote_1']." ".$vars['hour_vote_1'] . "',
+				date_vote_2 = '" . $vars['date_vote_2']." ".$vars['hour_vote_2'] . "',
+				date_vote_3 = '" . $vars['date_vote_3']." ".$vars['hour_vote_3'] . "',
 				date_winner = '" . $vars['date_winner']." ".$vars['hour_winner'] . "',
 				sponsor_name_1 = '%s', 
 				sponsor_url_1 = '%s',
@@ -235,6 +243,7 @@ class Admin{
 				mysql_real_escape_string(htmlspecialchars($vars['name'],ENT_QUOTES)),
 				mysql_real_escape_string(htmlspecialchars($vars['description'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['keywords']),
+				mysql_real_escape_string($vars['esid']),
 				mysql_real_escape_string(htmlspecialchars($vars['heading'],ENT_QUOTES)),
 				mysql_real_escape_string($vars['body_text']),
 				mysql_real_escape_string($vars['sponsor_name_1']),
@@ -286,6 +295,7 @@ class Admin{
 
 	### entrants ###
 	
+
 	/**
 	 * gets total number of entrants in system
 	 * @return integer total entrants in system
@@ -354,7 +364,7 @@ class Admin{
 		$r = mysql_query("SELECT *, MAX(date_entered) as last_entry
 			FROM " . ENTRANT_TABLE . "
 			GROUP BY email 
-			ORDER BY lname ASC, date_entered DESC 
+			ORDER BY fname ASC, date_entered DESC 
 			LIMIT " . $offset . ", " . $perpage);
 
 
@@ -371,7 +381,7 @@ class Admin{
 				$totalWins = $this->getTotalWins($entrant['email']);
 				$html .= '<tr>';
 				$html .= '<td>' . date("m.d.Y",strtotime($entrant['last_entry'])) . '</td>';
-				$html .= '<td>' . $entrant['fname'] . ' ' . $entrant['lname'] . '</td>';
+				$html .= '<td>' . stripslashes($entrant['fname']) . ' ' . $entrant['lname'] . '</td>';
 				$html .= '<td class="tcenter"><a href="mailto:' . $entrant['email'] . '"><i class="fa fa-send"></i> ' . $entrant['email'] . '</a></td>';
 				$html .= '<td class="tcenter">' . $entrant['phone'] . '</td>';
 				$html .= '<td class="tcenter">' . $totalEntries . '</a></td>';
@@ -454,17 +464,25 @@ class Admin{
 		if(!isset($page)){ $page=1; }
 		$offset = ($page-1)*$perpage;
 
-		if($status==1){ $statusName = 'pending'; }
-		if($status==2){ $statusName = 'active'; }
+		if($status==1){ $statusName = 'pending'; $orderBy='fname'; $sort='asc'; }
+		if($status==2){ $statusName = 'active'; $orderBy='votes'; $sort='desc'; }
 
 		$return = array();
 
-		$r = mysql_query("SELECT *
+		if($status==2){ $r = mysql_query("SELECT e.*, COUNT(v.entrant_id) as votes
+			FROM " . ENTRANT_TABLE . " e LEFT JOIN cc_upload_votes v on v.entrant_id=e.id
+			WHERE e.contest_id = '" . $contestID . "'
+			AND e.status = '" . $status . "'
+			GROUP BY v.entrant_id, e.id
+			ORDER BY " . $orderBy ." ". $sort .", fname ASC
+			LIMIT " . $offset . ", " . $perpage); }
+
+		if($status==1){ $r = mysql_query("SELECT *
 			FROM " . ENTRANT_TABLE . "
 			WHERE contest_id = '" . $contestID . "'
 			AND status = '" . $status . "'
-			ORDER BY lname ASC, fname ASC
-			LIMIT " . $offset . ", " . $perpage);
+			ORDER BY fname ASC, fname ASC
+			LIMIT " . $offset . ", " . $perpage); }
 
 		$rtot = mysql_query("SELECT count(id)
 			FROM " . ENTRANT_TABLE . "
@@ -494,7 +512,7 @@ class Admin{
 				if($entrant['status']==2){ $status = 'Active'; }
 				if($entrant['status']==3){ $status = 'Winner'; }
 				$return['html'] .= '<tr>';
-				$return['html'] .= '<td>' . $entrant['fname'] . ' ' . $entrant['lname'] . '</td>';
+				$return['html'] .= '<td>' . stripslashes($entrant['fname']) . ' ' . $entrant['lname'] . '</td>';
 				$return['html'] .= '<td><a href="mailto:' . $entrant['email'] . '"><i class="fa fa-send"></i> ' . $entrant['email'] . '</a></td>';
 				$return['html'] .= '<td>' . $entrant['phone'] . '</td>';
 				$return['html'] .= '<td class="tcenter">' . $votes . '</td>';
@@ -590,7 +608,5 @@ class Admin{
 		$html .= '</div>';
 		return $html;
 	}
-
-	
 
 }

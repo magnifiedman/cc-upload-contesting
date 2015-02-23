@@ -43,8 +43,8 @@ if(isset($_POST['deleteForm'])){
 
 // get page content
 $contest = $a->getContestDetails($id);
-$entrants = $a->getContestEntrants($id,$status, $page, 30);
-$totalPages = ceil($entrants['total']/30);
+$entrants = $a->getContestEntrants($id,$status, $page, 50);
+$totalPages = ceil($entrants['total']/50);
 
 
 //updated local page template
@@ -89,7 +89,7 @@ include 'CCOMRheader.template'; // do not modify this line
 </div>
 <!-- end pagecontainer -->
 
-	<!-- <script src="<?php echo BASE_URL; ?>js/jquery-1.10.1.min.js"></script> -->
+	<!-- local scripts -->
 	<script src="../<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.validate.min.js"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.fancybox.pack.js"></script>
@@ -104,7 +104,6 @@ include 'CCOMRheader.template'; // do not modify this line
 		});
 	
 	</script>
-
-<!-- local scripts -->
+	<!-- end local scripts -->
 
 <?php include 'CCOMRfooter.template'; ?>

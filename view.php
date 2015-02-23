@@ -37,6 +37,8 @@ $galleryThumbHTML = $c->getGalleryThumbs($contest['id'], $contest['contest_type'
 $galleryCount = count($entrants);
 $calendarHTML = $c->getCalendar();
 
+
+// set text for share buttons
 switch($status){
 	case 1:
 	$actionText = 'View Entrants';
@@ -107,7 +109,7 @@ include 'CCOMRheader.template'; // do not modify this line
 
 
 <!-- stylesheets -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>css/style.css?x=<?php echo $x; ?>" media="screen" />
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>css/style.css" media="screen" />
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/jquery.fancybox.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/flexslider.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/font-awesome.min.css?x=<?php echo $x; ?>">
@@ -143,11 +145,12 @@ include 'CCOMRheader.template'; // do not modify this line
 					if($status==1 || $status==3){ $buttonHTML = ''; }
 					if($status==2){ $buttonHTML = '<a class="button big vote-btn"><i class="fa fa-thumbs-up"></i> <span>Vote For Me</span></a>'; }
 					echo '<li><span class="rightbox">' . $buttonHTML;
-					echo 'Share This:<br /><a class="fright" href="http://twitter.com/share?text=Vote+For+' . $entrant['fname'] . '+' . substr($entrant['lname'],0,1) .'.+on+'.$contest['name'].'&url=' . $shareLink . '" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>';
-	    			echo '<a class="fright" href="https://www.facebook.com/dialog/feed?app_id=' . FB_APP_ID . '&link='.$shareLink.'&picture='. CONTEST_IMG_PATH . $fbThumb.'&name='.$fbAction.'+' . $entrant['fname'] . '+' . substr($entrant['lname'],0,1) .'.&caption='.$contest['name'].'&description='.$contest['description'].'&redirect_uri=http://' . $_SERVER['HTTP_HOST'] . '/common/contest/?' . $contest['url_code'] . '" target="_blank"><i class="fa fa-facebook-square fa-3x"></i></a></span>';
-	    			echo '<p><strong>' . $entrant['fname'] . ' ' . substr($entrant['lname'],0,1) . '.</strong><br />' . $i . ' of ' . $galleryCount . ' in this gallery</p>';
+					echo 'Share This:<br /><a class="fright" href="http://twitter.com/share?text=Vote+For+' . stripslashes($entrant['fname']) . '+' . substr($entrant['lname'],0,1) .'.+on+'.$contest['name'].'&url=' . $shareLink . '" target="_blank"><i class="fa fa-twitter-square fa-3x"></i></a>';
+	    			echo '<a class="fright" href="https://www.facebook.com/dialog/feed?app_id=' . FB_APP_ID . '&link='.$shareLink.'&picture='. CONTEST_IMG_PATH . $fbThumb.'&name='.$fbAction.'+' . $entrant['fname'] . '+' . substr($entrant['lname'],0,1) .'.&caption='.$contest['name'].'&description=&redirect_uri=http://' . $_SERVER['HTTP_HOST'] . '/common/contest/?' . $contest['url_code'] . '" target="_blank"><i class="fa fa-facebook-square fa-3x"></i></a></span>';
+	    			echo '<p><strong>' . stripslashes($entrant['fname']) . ' ' . $entrant['lname'] . '</strong><br />' . $i . ' of ' . $galleryCount . ' in this gallery</p>';
 	    			echo $message;
 	    			echo '<div class="vote-form-box" style="display:none;"><form action="" class="theForm vote-form" method="post"><input type="hidden" name="voteForm" value="y" /><input type="hidden" name="eid" value="'.$entrant['id'].'" /><input type="hidden" name="cid" value="'.$contest['id'].'" /><input type="email" name="email" placeholder="you@youremail.com" required/><input type="submit" name="submit" class="button blue" value="Place Vote" /></form></div>';
+	    			if($contest['contest_type']==3) { echo $entrant['img'].'<br />';}
 	    			echo $entrant['embedCode'] . '<div class="clear"></div></li>';
 					$i++;
 				}
@@ -167,9 +170,10 @@ include 'CCOMRheader.template'; // do not modify this line
 		</div>
 		<div class="clear"></div>
 
-	    <div class="moduleContainer" id="ad300x250">
-			<iframe name="adframe" width="300" height="250" src="ad.php?" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
-		</div>
+	    <!-- box ad -->
+	    <div class="adbox">
+	        <div id="DARTad300x250"><script>DFP.pushAd({div:"DARTad300x250",size:"300x250",position:"3307"} );</script></div>
+	    </div>
     
     
 	    <?php if($contest['release_form']!=''){ ?>

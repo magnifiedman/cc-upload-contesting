@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CC Upload Contesting Voter Class
  * Original Creation Date 05.2014
@@ -60,10 +59,10 @@ class Voter{
 			}
 
 			// send email
-			$subject = 'Voter registration and confirmation - Clear Channel Contesting';
+			$subject = 'Voter registration and confirmation - iHeartMedia Contesting';
 			$header  ="MIME-Version: 1.0\n";
 			$header .= "Content-type: text/html; charset=iso-8859-1\n";
-			$header .= "From: Clear Channel Contesting <noreply@clearchannel.com>\r\n";
+			$header .= "From: iHeartMedia Contesting <noreply@iheartmedia.com>\r\n";
 			$message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				  <html xmlns="http://www.w3.org/1999/xhtml">
 				  <head>
@@ -79,7 +78,7 @@ class Voter{
 				  <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#e6e6e6">
 				  <tr>
 				  <td>
-				  <p style="margin:30px;">Thank you for registering to vote in <strong>Clear Channel Web Site Contesting</strong>.</p>
+				  <p style="margin:30px;">Thank you for registering to vote in <strong>iHeartMedia Web Site Contesting</strong>.</p>
 				  <p style="margin:30px;">Since this is your very first time voting, we just need to confirm your email address.</p>
 				  <p style="margin:30px;">Please click the below link to confirm your email address:<br />
 				  <a href="http://'.$_SERVER['HTTP_HOST'].'/common/contest/confirm.php?'.$urlCode.'&vid='.$voterID.'&eid='.$entrantID.'">CLICK HERE TO CONFIRM</a></p>
@@ -91,7 +90,7 @@ class Voter{
 				  </table>
 				  <table width="600" cellpadding="8" cellspacing="0" border="0" bgcolor="#ffffff">
 				  <tr>
-				  <td align="center">&copy; '.date("Y").' Clear Channel Media &amp; Entertainment</td>
+				  <td align="center">&copy; '.date("Y").' iHeartMedia</td>
 				  </tr>
 				  </table>
 				  </center>
@@ -104,7 +103,6 @@ class Voter{
 
 		else { echo "NOPE"; }
 		
-
 	}
 
 
@@ -205,7 +203,6 @@ class Voter{
 		else {
 			return false;
 		}
-	}
-	
+	}	
 
 }

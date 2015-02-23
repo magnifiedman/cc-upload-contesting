@@ -11,7 +11,8 @@
 </head>
 
 <body>
-<?php include_once("/export/home/cc-common/wss/wss_include.html"); ?>
+	
+	<?php include_once("/export/home/cc-common/wss/wss_include.html"); ?>
 
 	<script type="text/javascript" src="/cc-common/wss/hbx.js"></script>
 	<script type="text/javascript">
@@ -21,8 +22,6 @@
 		var s_code=s.t();if(s_code)document.write(s_code)
 		//-->
 	</script>
-
-	
 
 </body>
 </html>

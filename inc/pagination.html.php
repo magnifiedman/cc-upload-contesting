@@ -15,7 +15,7 @@
 
 			} else {
 
-				echo '<a href="?page=' . $i . '">' . $i . '</a>';
+				echo '<a href="'.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'].'&p=' . $i . '">' . $i . '</a>';
 
 			}
 		}

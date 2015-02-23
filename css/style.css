@@ -27,11 +27,13 @@
 }
 
 .pageContainer h2, .pageContainer h3 {
-	font-family: 'Medula One', cursive!important;
-	font-weight:normal;
-	font-size:48px;
+	
+	font-family: 'Nobile', sans-serif!important;
+	font-weight:400;
+	font-size:30px;
 	margin:20px;
 	color:#444;
+	text-transform:uppercase;
 }
 
 .pageContainer a {
@@ -86,12 +88,11 @@ body .pageContainer .lCol a.flex-next:hover, body .pageContainer .lCol a.flex-pr
 
 .lCol h2 {
 	margin:20px 30px!important;
-	line-height:1.5em!important;
+	line-height:1.0em!important;
 }
 
 .lCol h3 {
-	margin:20px 30px!important;
-	line-height:1.5em!important;
+	margin:20px 30px!imp05em!important;
 	font-size:36px;
 }
 
@@ -255,7 +256,8 @@ body .pageContainer .lCol a.flex-next:hover, body .pageContainer .lCol a.flex-pr
     padding: 15px 15px 15px;
     margin-bottom:0;
     margin-left:0;
-    font-size:18px;
+    font-size:21px!important;
+    font-weight:bold!important;
 }
 
 .flexslider {
@@ -463,10 +465,14 @@ body .pageContainer .lCol a.flex-next:hover, body .pageContainer .lCol a.flex-pr
 	}
 
 	.theForm {
-		margin:20px 30px;
+		margin:20px 30px!important;
 	}
 
 	/** admin **/
+	#adminForm {
+	    margin:30px auto;
+	}
+	
 	#adminForm label.error {
 	    background-color: #ff3500;
 	    border-radius: 0 0 6px 6px;
@@ -573,4 +579,16 @@ body .pageContainer .lCol a.flex-next:hover, body .pageContainer .lCol a.flex-pr
 		display:inline;
 		margin-right:10px;
 		
+	}
+
+	.pageWrapper .carousel {
+	    width:620px;
+	}
+
+	.fullWidth {
+		width:100%;
+	}
+
+	.expired {
+		color:#a6a6a6;
 	}

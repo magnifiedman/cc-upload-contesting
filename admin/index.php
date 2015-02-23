@@ -35,16 +35,16 @@ if(isset($_POST['deleteForm'])){
 if($step==2){
 	if(!isset($_GET['p'])){ $page=1; }
 	else { $page = $_GET['p']; }
-	$adminHTML = $a->getContestOverview($page,30);
+	$adminHTML = $a->getContestOverview($page,50);
 	$totalContests = $a->getTotalContests();
 
-	$totalPages = ceil($totalContests/30);
+	$totalPages = ceil($totalContests/50);
 	
 }
 
 // search for entrants
 if(isset($_POST['searchForm'])){
-	$adminHTML = $a->getContestSearch($searchStr, $page, 30);
+	$adminHTML = $a->getContestSearch($searchStr, $page, 50);
 	$step=3;
 }
 
@@ -66,7 +66,7 @@ include 'CCOMRheader.template'; // do not modify this line
 ?>
 
 <!-- stylesheets -->
-<link rel="stylesheet" href="../<?php echo BASE_URL; ?>css/style.css?x=<?php echo $x; ?>" media="screen" />
+<link rel="stylesheet" href="../<?php echo BASE_URL; ?>css/style.css?<?php echo $x; ?>" media="screen" />
 <link rel="stylesheet" href="../<?php echo BASE_URL; ?>css/jquery.fancybox.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="../<?php echo BASE_URL; ?>css/flexslider.css?x=<?php echo $x; ?>">
 <link rel="stylesheet" href="../<?php echo BASE_URL; ?>css/font-awesome.min.css?x=<?php echo $x; ?>">
@@ -123,7 +123,7 @@ include 'CCOMRheader.template'; // do not modify this line
 </div>
 <!-- end pagecontainer -->
 
-	<!-- <script src="<?php echo BASE_URL; ?>js/jquery-1.10.1.min.js"></script> -->
+	<!-- local scripts -->
 	<script src="../<?php echo BASE_URL; ?>js/jquery.flexslider-min.js?"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.validate.min.js"></script>
 	<script src="../<?php echo BASE_URL; ?>js/jquery.fancybox.pack.js"></script>
@@ -136,9 +136,9 @@ include 'CCOMRheader.template'; // do not modify this line
 			$("#adminForm").validate();
 
 		});
-
 	
 	</script>
+	<!-- end local scripts -->
 
 
 <?php include 'CCOMRfooter.template'; ?>
